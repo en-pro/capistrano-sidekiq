@@ -40,7 +40,8 @@ Capistrano::Configuration.instance.load do
     end
 
     def for_each_role
-      roles(fetch(:sidekiq_role)).each do |host|
+      sidekiq_role = fetch(:sidekiq_role)
+      roles(sidekiq_role).each do |host|
         puts "executing on ##{ sidekiq_role }"
         yield(sidekiq_role)
       end
