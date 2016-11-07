@@ -40,18 +40,21 @@ Capistrano::Configuration.instance.load do
     end
 
     def for_each_role
-      sidekiq_roles = fetch(:sidekiq_role)
-
-      sidekiq_roles = if sidekiq_roles.respond_to?(:to_ary)
-                        sidekiq_roles.to_ary
-                      else
-                        [sidekiq_roles]
-                      end
-
-      sidekiq_roles.to_ary.each do |sidekiq_role|
-        puts "executing on ##{ sidekiq_role }" if sidekiq_roles.size > 1
+      roles(fetch(:sidekiq_role)).each do |host|
+        puts "executing on ##{ sidekiq_role }"
         yield(sidekiq_role)
       end
+
+      # sidekiq_roles = if sidekiq_roles.respond_to?(:to_ary)
+      #                   sidekiq_roles.to_ary
+      #                 else
+      #                   [sidekiq_roles]
+      #                 end
+      #
+      # sidekiq_roles.to_ary.each do |sidekiq_role|
+      #   puts "executing on ##{ sidekiq_role }" if sidekiq_roles.size > 1
+      #   yield(sidekiq_role)
+      # end
     end
 
     def run_as(cmd)
@@ -142,6 +145,5 @@ Capistrano::Configuration.instance.load do
       stop
       start
     end
-
   end
 end
